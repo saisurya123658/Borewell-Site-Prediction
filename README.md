@@ -1,85 +1,513 @@
-# Borewell Site Prediction
+# 🌍 Borewell Site Prediction System
 
-A full-stack app for **groundwater potential zone (GWPZ)–style preview** inside a user-defined study area in India. You draw a parcel (polygon) or define a circle (center + radius); the backend scores pixels with terrain and vegetation proxies plus placeholder geology layers, then suggests a lat/lon inside your boundary.
+<div align="center">
 
+# 🚀 AI-Powered Groundwater Potential Zone Prediction Platform
 
-## Stack
+Predict the **best borewell drilling location** inside a user-selected land parcel using **terrain analysis, NDVI vegetation insights, and machine learning**.
 
-| Part | Technology |
-|------|------------|
-| Frontend | React 19, TypeScript, Vite, Leaflet / react-leaflet, leaflet-draw, Turf.js |
-| Backend | FastAPI, GeoPandas, Rasterio, scikit-learn (Random Forest), optional Google Earth Engine |
+![React](https://img.shields.io/badge/Frontend-React%2019-blue?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)
+![Python](https://img.shields.io/badge/Python-3.11+-yellow?style=for-the-badge&logo=python)
+![Leaflet](https://img.shields.io/badge/Maps-Leaflet-green?style=for-the-badge&logo=leaflet)
+![Machine Learning](https://img.shields.io/badge/ML-Random%20Forest-orange?style=for-the-badge)
 
-## How it works (short)
+</div>
 
-1. The frontend sends your study polygon as GeoJSON (WGS84) to `POST /analyze`.
-2. The backend rasterizes the polygon in a local UTM CRS, builds feature stacks (slope, NDVI, mocked geology-style layers), fits a lightweight classifier, and returns the best-scoring pixel coordinates, a **potential category** (Very Good → Poor), and a **confidence** figure derived from hold-out accuracy (not field truth).
-3. With `USE_GEE=true` and valid Earth Engine credentials, slope (SRTM) and NDVI (Sentinel-2) can come from GEE when grid shapes align; otherwise slope/NDVI are **synthetic mocks** for local development.
+---
 
-## Prerequisites
+# ✨ Features
 
-- **Python** 3.11+ recommended (geospatial wheels vary by version).
-- **Node.js** 20+ (for Vite 7).
-- On Windows, GDAL/rasterio wheels usually install via pip; if `rasterio` fails, use a conda env or follow [rasterio install docs](https://rasterio.readthedocs.io/en/stable/installation.html).
+- ✅ Draw custom land parcels directly on the map
+- ✅ Circle-based study area selection
+- ✅ AI-powered groundwater suitability scoring
+- ✅ Terrain slope analysis
+- ✅ NDVI vegetation analysis
+- ✅ Random Forest classification model
+- ✅ Confidence-based prediction system
+- ✅ FastAPI backend with geospatial processing
+- ✅ React + Leaflet interactive frontend
+- ✅ Optional Google Earth Engine integration
+- ✅ Fully responsive UI
 
-## Backend
+---
+
+# 🖼️ Application Workflow
+
+```text
+Draw Area → Send Polygon → Analyze Terrain & Vegetation →
+ML Prediction → Best Borewell Location
+```
+
+---
+
+# 🧠 How It Works
+
+The system predicts groundwater potential using geospatial and environmental indicators.
+
+## 🔄 Workflow
+
+### 1️⃣ User Draws Area
+
+The user selects:
+
+- A polygon parcel
+OR
+- A circular region (center + radius)
+
+on the interactive map.
+
+---
+
+### 2️⃣ Frontend Sends GeoJSON
+
+The frontend sends the selected geometry to:
+
+```http
+POST /analyze
+```
+
+Example payload:
+
+```json
+{
+  "polygon_geojson": { ... },
+  "resolution_m": 30
+}
+```
+
+---
+
+### 3️⃣ Backend Processing
+
+The backend performs:
+
+- CRS transformation (WGS84 → Local UTM)
+- Rasterization
+- Terrain feature extraction
+- NDVI computation
+- Synthetic geology feature generation
+- ML-based groundwater scoring
+
+---
+
+### 4️⃣ Machine Learning Prediction
+
+A lightweight **Random Forest Classifier** predicts the best groundwater potential zone.
+
+The API returns:
+
+- 📍 Suggested latitude & longitude
+- 🌊 Potential category
+- 📊 Confidence score
+- 📝 Analysis notes
+
+---
+
+# 🏗️ Tech Stack
+
+| Layer | Technology |
+|------|-------------|
+| Frontend | React 19 |
+| Language | TypeScript |
+| Build Tool | Vite 7 |
+| Maps | Leaflet + React Leaflet |
+| Drawing Tools | leaflet-draw |
+| Spatial Utilities | Turf.js |
+| Backend | FastAPI |
+| Geospatial Processing | GeoPandas |
+| Raster Processing | Rasterio |
+| Machine Learning | scikit-learn |
+| Optional Satellite Data | Google Earth Engine |
+
+---
+
+# 📂 Project Structure
+
+```bash
+borewell-site-prediction/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── engine/
+│   │   ├── services/
+│   │   └── utils/
+│   │
+│   ├── requirements.txt
+│   └── .venv/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── vite.config.ts
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+# ⚙️ Backend Setup
+
+## 📌 Requirements
+
+- Python 3.11+
+- pip
+- virtualenv
+
+---
+
+## 🚀 Installation
 
 ```bash
 cd backend
+
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Unix: source .venv/bin/activate
+```
+
+### Activate Environment
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+## 📦 Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+---
+
+## ▶️ Run Backend
+
+```bash
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-- Health check: `GET http://127.0.0.1:8000/health`
-- Analyze: `POST http://127.0.0.1:8000/analyze` with JSON body `{ "polygon_geojson": { ... }, "resolution_m": 30 }` (`resolution_m` between 5 and 500).
+---
 
-### Optional: Google Earth Engine
+# 🔥 Backend Endpoints
 
-Set `USE_GEE=true` and authenticate per [Earth Engine Python setup](https://developers.google.com/earth-engine/guides/python_install). If GEE is off or initialization fails, the engine uses mocked slope/NDVI.
+## ✅ Health Check
 
-## Frontend
+```http
+GET /health
+```
+
+Example:
+
+```http
+http://127.0.0.1:8000/health
+```
+
+---
+
+## 🌍 Analyze Borewell Site
+
+```http
+POST /analyze
+```
+
+### Request Body
+
+```json
+{
+  "polygon_geojson": { ... },
+  "resolution_m": 30
+}
+```
+
+### Response Example
+
+```json
+{
+  "latitude": 15.9129,
+  "longitude": 79.7400,
+  "potential_category": "Very Good",
+  "confidence": 0.89,
+  "notes": "High vegetation and favorable slope detected"
+}
+```
+
+---
+
+## 🔎 Geocoding API
+
+```http
+GET /geocode?q=tirupati
+```
+
+Uses:
+
+- OpenStreetMap Nominatim
+- India-biased place search
+
+---
+
+# 🌐 Frontend Setup
+
+## 📦 Install Packages
 
 ```bash
 cd frontend
+
 npm install
-npm run dev
 ```
 
-The Vite dev server proxies `/api/*` to `http://127.0.0.1:8000` (see `frontend/vite.config.ts`). The client defaults `VITE_API_BASE` to `/api`, so **run the backend on port 8000** while using `npm run dev`.
+---
 
-To point at a different API URL (e.g. production):
+## ▶️ Run Frontend
 
 ```bash
-set VITE_API_BASE=https://your-api.example.com   # Windows cmd
-# or PowerShell: $env:VITE_API_BASE="https://your-api.example.com"
 npm run dev
 ```
 
-Build for production:
+---
+
+# 🔗 API Proxy Configuration
+
+The Vite dev server proxies:
+
+```bash
+/api/*
+```
+
+to:
+
+```bash
+http://127.0.0.1:8000
+```
+
+Configured inside:
+
+```bash
+frontend/vite.config.ts
+```
+
+---
+
+# 🌎 Production API URL
+
+To use another backend URL:
+
+## Windows CMD
+
+```bash
+set VITE_API_BASE=https://your-api.example.com
+npm run dev
+```
+
+## PowerShell
+
+```powershell
+$env:VITE_API_BASE="https://your-api.example.com"
+npm run dev
+```
+
+---
+
+# 🏗️ Production Build
+
+## Build Frontend
 
 ```bash
 npm run build
-npm run preview   # optional local preview of dist/
 ```
 
-## API summary
+---
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/health` | Liveness |
-| POST | `/analyze` | Body: `polygon_geojson`, optional `resolution_m`. Returns lat/lon, category, confidence, notes, disclaimer |
-| GET | `/geocode?q=...` | India-biased place search (proxies OpenStreetMap Nominatim). Use polite traffic; production should use a commercial geocoder if volume is high |
+## Preview Production Build
 
-## Project layout
-
-```
-backend/app/     # FastAPI app and GWPZ engine
-frontend/src/    # React UI and API client
+```bash
+npm run preview
 ```
 
-## License and data
+---
 
-Map tiles: OpenStreetMap contributors. Geocoding uses Nominatim; respect their [usage policy](https://operations.osmfoundation.org/policies/nominatim/). Earth Engine datasets are subject to Google’s terms when enabled.
+# 🛰️ Google Earth Engine Integration
+
+The project optionally supports:
+
+- SRTM terrain data
+- Sentinel-2 NDVI imagery
+
+via Google Earth Engine.
+
+---
+
+## Enable GEE
+
+Set:
+
+```env
+USE_GEE=true
+```
+
+---
+
+## Authenticate Earth Engine
+
+Follow official setup:
+
+```text
+https://developers.google.com/earth-engine/guides/python_install
+```
+
+---
+
+## Fallback Mode
+
+If GEE fails or is disabled:
+
+- ✅ Synthetic slope data
+- ✅ Mock NDVI generation
+
+are used for local development.
+
+---
+
+# 🧪 ML Model Details
+
+The prediction engine uses:
+
+## 🌲 Random Forest Classifier
+
+Features include:
+
+- Terrain slope
+- Elevation proxies
+- Vegetation density
+- Mock geology layers
+- Hydrological indicators
+
+---
+
+## 📊 Output Categories
+
+| Category | Meaning |
+|----------|----------|
+| Very Good | Excellent groundwater potential |
+| Good | Favorable borewell zone |
+| Moderate | Medium potential |
+| Poor | Low groundwater possibility |
+
+---
+
+# 📌 Resolution Settings
+
+`resolution_m`
+
+Controls raster precision.
+
+| Value | Meaning |
+|------|----------|
+| 5 | High detail |
+| 30 | Recommended |
+| 100+ | Faster processing |
+
+Allowed range:
+
+```text
+5 → 500 meters
+```
+
+---
+
+# 🛡️ Disclaimer
+
+⚠️ This project is intended for:
+
+- Educational purposes
+- Research prototypes
+- Geospatial experimentation
+
+It is NOT a replacement for:
+
+- Geological surveys
+- Hydrogeologist field inspections
+- Government-approved groundwater studies
+
+Predictions are generated using environmental proxies and ML estimation — not real underground water validation.
+
+---
+
+# 📜 License & Data Sources
+
+This project uses:
+
+- OpenStreetMap map tiles
+- Nominatim geocoding
+- Optional Google Earth Engine datasets
+
+Please respect their terms and usage policies.
+
+---
+
+# ❤️ Credits
+
+Built with passion using:
+
+- React
+- FastAPI
+- GeoPandas
+- Rasterio
+- Leaflet
+- Machine Learning
+- Open Geospatial Technologies
+
+---
+
+# ⭐ Future Improvements
+
+- Real borewell training datasets
+- Groundwater depth prediction
+- Rainfall integration
+- Soil classification
+- Satellite time-series analysis
+- AI heatmap visualization
+- Mobile app support
+- Cloud deployment
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+## Steps
+
+```bash
+Fork → Clone → Create Branch → Commit → Push → Pull Request
+```
+
+---
+
+# 📬 Contact
+
+```text
+Developer: Surya
+Project: Borewell Site Prediction
+```
+
+---
+
+<div align="center">
+
+# 🌊 Smart Groundwater Prediction using AI & Geospatial Intelligence
+
+⭐ Star this repository if you like the project!
+
+</div>
