@@ -1,0 +1,239 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  line-height: 1.45;
+  background: #0f1419;
+  color: #e8eaed;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: #7cb3ff;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(320px, 55vh);
+  }
+}
+
+.panel {
+  padding: 1rem 1.1rem 1.25rem;
+  background: #151b24;
+  border-right: 1px solid #243044;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  overflow: auto;
+}
+
+.panel h1 {
+  font-size: 1.15rem;
+  font-weight: 650;
+  margin: 0 0 0.2rem;
+}
+
+.panel .lede {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #a8b3c4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.86rem;
+}
+
+.field label {
+  color: #b9c3d1;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.panel button {
+  font: inherit;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.search-row {
+  display: flex;
+  gap: 0.45rem;
+  align-items: stretch;
+}
+
+.search-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn {
+  border: 1px solid #355070;
+  background: #1e2a3d;
+  color: #e8eaed;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: #243349;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #2d6a4f;
+  border-color: #40916c;
+  font-weight: 600;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #347d5d;
+}
+
+.seg {
+  display: flex;
+  border: 1px solid #355070;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.seg button {
+  flex: 1;
+  border: none;
+  background: #1a2230;
+  color: #c5ced9;
+  padding: 0.45rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.seg button.active {
+  background: #2a3d5a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.geocode-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid #2a3545;
+  border-radius: 8px;
+  background: #0f1419;
+}
+
+.geocode-list li {
+  padding: 0.45rem 0.55rem;
+  font-size: 0.78rem;
+  color: #c9d2df;
+  cursor: pointer;
+  border-bottom: 1px solid #243044;
+}
+
+.geocode-list li:last-child {
+  border-bottom: none;
+}
+
+.geocode-list li:hover {
+  background: #1a2230;
+}
+
+.result-card {
+  border: 1px solid #355070;
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  background: #0f1419;
+  font-size: 0.82rem;
+}
+
+.result-card h2 {
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  color: #8fd9b5;
+}
+
+.coords {
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+.disclaimer {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: #8a97a8;
+  margin: 0;
+  padding: 0.5rem 0.55rem;
+  background: #101820;
+  border: 1px solid #2f3d52;
+  border-radius: 8px;
+}
+
+.map-wrap {
+  position: relative;
+  min-height: 400px;
+  height: 100%;
+}
+
+.leaflet-container {
+  height: 100%;
+  min-height: 400px;
+  width: 100%;
+}
+
+.map-hint {
+  position: absolute;
+  z-index: 1000;
+  right: 10px;
+  top: 10px;
+  max-width: min(280px, 90vw);
+  background: rgba(15, 20, 25, 0.92);
+  border: 1px solid #355070;
+  border-radius: 8px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.72rem;
+  color: #b8c4d4;
+  pointer-events: none;
+}
+
+.notes-muted {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  color: #8b97a8;
+}
+
+.err {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #ffb4a2;
+}
